@@ -19,8 +19,14 @@
 		    exec-path-from-shell
 		    avy
 		    ace-window
+		    neotree
+		    expand-region
+		    flycheck
+		    yasnippet
 		    ;; --- Themes ---
 		    monokai-theme
+		    iedit
+		    undo-tree
 		    ;; solarized-theme
 		    ) "Default packages")
 
@@ -203,7 +209,64 @@
      '(aw-leading-char-face
        ((t (:inherit ace-jump-face-foreground :height 3.0)))))
    #+END_SRC
+** Neotree
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path "/some/path/neotree")
+     (require 'neotree)
+
+     (defun neotree-project-dir-toggle ()
+	    "Open NeoTree using the project root, using find-file-in-project,
+	  or the current buffer directory."
+	    (interactive)
+     (let ((project-dir
+	    (ignore-errors
+		     ;;; Pick one: projectile or find-file-in-project
+		     ; (projectile-project-root)
+		     (ffip-project-root)
+		     ))
+		  (file-name (buffer-file-name))
+		  (neo-smart-open t))
+	      (if (and (fboundp 'neo-global--window-exists-p)
+		       (neo-global--window-exists-p))
+		  (neotree-hide)
+		(progn
+		  (neotree-show)
+		  (if project-dir
+		      (neotree-dir project-dir))
+		  (if file-name
+		      (neotree-find file-name))))))
+     (define-key global-map (kbd "<f8>") 'neotree-project-dir-toggle)
+   #+END_SRC
+** Expand region
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-=") 'er/expand-region)
+   #+END_SRC
+** iEdit
+   #+BEGIN_SRC emacs-lisp
+     (require 'iedit)
+   #+END_SRC
+** Yasnippet
+   #+BEGIN_SRC emacs-lisp
+     (require 'yasnippet)
+     (setq yas-snippet-dirs
+	'("~/.emacs.d/snippets"                 ;; local snippets
+	  "~/.emacs.d/Dropbox/snippets"         ;; snippets from Dropbox
+	  ))
+     (yas-global-mode 1)
+   #+END_SRC
+** Flycheck
+   #+BEGIN_SRC emacs-lisp
+     (global-flycheck-mode t)
+   #+END_SRC
+** Undo Tree
+   #+BEGIN_SRC emacs-lisp
+     (global-undo-tree-mode)
+   #+END_SRC
 * Theme
+** Monokai
   #+Begin_SRC emacs-lisp
     (load-theme 'monokai t)
   #+END_SRC
+** Nyan Mode
+   #+BEGIN_SRC emacs-lisp
+     
