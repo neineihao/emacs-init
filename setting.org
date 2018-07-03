@@ -1,0 +1,393 @@
+
+#+TITLE: Config for init.el
+#+STARTUP: hidestars
+
+* Default Setting
+** Shortcut for init.el
+   #+BEGIN_SRC emacs-lisp
+     (defun open-my-init-file()
+       (interactive)
+       (find-file "~/.emacs.d/setting.org"))
+     (global-set-key (kbd "<f3>") 'open-my-init-file)    
+   #+END_SRC
+** Windows Moving
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-S") 'windmove-up)
+     (global-set-key (kbd "M-X") 'windmove-down)
+     (global-set-key (kbd "M-C") 'windmove-right)
+     (global-set-key (kbd "M-Z") 'windmove-left)    
+   #+END_SRC
+** Recent File
+   #+BEGIN_SRC emacs-lisp
+     (require 'recentf)
+     (recentf-mode 1)
+     (setq recentf-max-menu-items 25)
+     (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+   #+END_SRC
+** Some keybondings
+   #+BEGIN_SRC emacs-lisp
+     (setq user-full-name "Chen Pei Hao"
+	   user-mail-address "s894117@gmail.com")
+   #+END_SRC
+** Others
+   #+BEGIN_SRC emacs-lisp
+     (winner-mode 1)
+     (tool-bar-mode -1)
+     (scroll-bar-mode -1)
+     (global-linum-mode t)
+     (global-hl-line-mode t)
+     (set-face-attribute 'default nil :height 140)
+     (setq-default cursor-type 'bar)
+     (setq make-backup-files nil)
+     (setq initial-frame-alist (quote ((fullscreen . maximized))))
+     (defalias 'list-buffers 'ibuffer)
+     (fset 'yes-or-no-p 'y-or-n-p)
+     ;;(global-set-key (kbd "<f5>") 'revert-buffer)
+     ;;(global-set-key [f1] 'shell)
+     ;;(setq make-backup-files t)
+     (setq backup-directory-alist
+	   `((".*" . ,temporary-file-directory)))
+     (setq auto-save-file-name-transforms
+	   `((".*" ,temporary-file-directory t)))
+     (global-set-key (kbd "C-w") 'backward-kill-word)
+   #+END_SRC
+** Save all files in buffer
+   #+BEGIN_SRC emacs-lisp
+     (defun save-all () (interactive) (save-some-buffers t))
+     (global-set-key (kbd "<f5>") 'save-all)
+   #+END_SRC
+** Auto fill
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+   #+END_SRC
+** New Line setting
+   #+BEGIN_SRC emacs-lisp
+     (global-visual-line-mode t)
+   #+END_SRC
+** Revert buffer
+   #+BEGIN_SRC emacs-lisp
+     ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
+     (defun revert-buffer-no-confirm ()
+	 "Revert buffer without confirmation."
+	 (interactive)
+	 (revert-buffer :ignore-auto :noconfirm))
+
+   #+END_SRC
+* Package
+** Try
+   #+BEGIN_SRC emacs-lisp
+     (use-package try
+	:ensure t)
+   #+END_SRC
+** which-key
+   #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :ensure t
+       :config (which-key-mode))    
+   #+END_SRC
+** org-bullets
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+   #+END_SRC
+** hungry-delete
+   #+BEGIN_SRC emacs-lisp
+     (use-package hungry-delete
+       :ensure t
+       :config (require 'hungry-delete))
+     (global-hungry-delete-mode)
+   #+END_SRC
+** smartparens
+   #+BEGIN_SRC emacs-lisp
+     (use-package smartparens
+       :ensure t
+       :config (require 'smartparens-config))
+     (smartparens-global-mode t)
+
+   #+END_SRC
+** Company
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :ensure t
+       :config (add-hook 'after-init-hook 'global-company-mode))
+
+     (require 'company)
+
+     (add-hook 'after-init-hook 'global-company-mode)
+
+     ;; Don't enable company-mode in below major modes, OPTIONAL
+     (setq company-global-modes '(not eshell-mode comint-mode erc-mode rcirc-mode))
+
+     ;; "text-mode" is a major mode for editing files of text in a human language"
+     ;; most major modes for non-programmers inherit from text-mode
+     (defun text-mode-hook-setup ()
+       ;; make `company-backends' local is critcal
+       ;; or else, you will have completion in every major mode, that's very annoying!
+       (make-local-variable 'company-backends)
+
+       ;; company-ispell is the plugin to complete words
+       (add-to-list 'company-backends 'company-ispell)
+
+       ;; OPTIONAL, if `company-ispell-dictionary' is nil, `ispell-complete-word-dict' is used
+       ;;  but I prefer hard code the dictionary path. That's more portable.
+       (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt")))
+
+     (add-hook 'text-mode-hook 'text-mode-hook-setup)
+
+     (defun toggle-company-ispell ()
+       (interactive)
+       (cond
+	((memq 'company-ispell company-backends)
+	 (setq company-backends (delete 'company-ispell company-backends))
+	 (message "company-ispell disabled"))
+	(t
+	 (add-to-list 'company-backends 'company-ispell)
+	 (message "company-ispell enabled!"))))
+   #+END_SRC
+** Ido mode
+   #+BEGIN_SRC emacs-lisp
+     (setq indo-enable-flex-matching t)
+     (setq ido-everywhere t)
+     (ido-mode 1)    
+   #+END_SRC
+** Swiper
+   #+BEGIN_SRC emacs-lisp
+     (use-package counsel
+       :bind
+       (("M-y" . counsel-yank-pop)
+	:map ivy-minibuffer-map
+	("M-y" . ivy-next-line)))
+
+     (setq save=interprogram-paste-before-kill t)
+
+     (use-package swiper
+       :ensure t
+       :config
+       (progn
+	 (ivy-mode 1)
+	 (setq ivy-use-virtual-buffers t)
+	 (setq enable-recursive-minibuffers t)
+	 (global-set-key "\C-s" 'swiper)
+	 (global-set-key (kbd "C-c C-r") 'ivy-resume)
+	 (global-set-key (kbd "<f6>") 'ivy-resume)
+	 (global-set-key (kbd "M-x") 'counsel-M-x)
+	 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+	 (global-set-key (kbd "<f2> f") 'counsel-describe-function)
+	 (global-set-key (kbd "<f2> v") 'counsel-describe-variable)
+	 (global-set-key (kbd "<f2> l") 'counsel-find-library)
+     ;;    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+     ;;    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+	 (global-set-key (kbd "C-c g") 'counsel-git)
+	 (global-set-key (kbd "C-c j") 'counsel-git-grep)
+     ;;    (global-set-key (kbd "C-c k") 'counsel-ag)
+     ;;    (global-set-key (kbd "C-x l") 'counsel-locate)
+     ;;    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+	 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)))    
+   #+END_SRC
+** Theme setting (monokai)
+   #+BEGIN_SRC emacs-lisp
+     (use-package monokai-theme
+       :ensure t)    
+   #+END_SRC
+** Avy
+   #+BEGIN_SRC emacs-lisp
+     (use-package avy
+       :ensure t
+       :bind ("M-s" . avy-goto-char)
+	     ("M-g f" . avy-goto-line))
+   #+END_SRC
+** Ace Windows
+   #+BEGIN_SRC emacs-lisp
+     (windmove-default-keybindings)
+     (use-package ace-window
+       :ensure t
+       :init
+       (progn
+	 (global-set-key [remap other-window] 'ace-window)
+	 (custom-set-faces
+	  '(aw-leading-char-face
+	    ((t (:inherit ace-jump-face-foreground :height 3.0))))) 
+	 ))
+   #+END_SRCㄋ
+** Flycheck
+   #+BEGIN_SRC emacs-lisp
+     (use-package flycheck
+       :ensure t
+       :init
+       (global-flycheck-mode t))
+
+     (use-package jedi
+       :ensure t
+       :init
+       (add-hook 'python-mode-hook 'jedi:setup)
+       (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+     (use-package yasnippet
+       :ensure t
+       :init
+	 (yas-global-mode 1))
+   #+END_SRC
+** Undo Tree
+   #+BEGIN_SRC emacs-lisp
+     (use-package undo-tree
+       :ensure t
+       :init
+	(global-undo-tree-mode))
+   #+END_SRC
+** Load if Exist
+   #+BEGIN_SRC emacs-lisp
+     (defun load-if-exists(f)
+       "load the elisp file inly if it exists and is readable"
+       (if (file-readable-p f)
+	   (load-file f)))
+   #+END_SRC
+** Web Mode
+   #+BEGIN_SRC emacs-lisp
+       (use-package web-mode
+	 :ensure t
+	 :config
+	      (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+	      (setq web-mode-engines-alist
+		    '(("django"    . "\\.html\\'")))
+	      (setq web-mode-ac-sources-alist
+		    '(("css" . (ac-source-css-property))
+		      ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+
+     (setq web-mode-enable-auto-closing t)
+     (setq web-mode-enable-auto-quoting t)) ; this fixes the quote problem I mentioned
+
+   #+END_SRC
+** Google Clander
+   #+BEGIN_SRC emacs-lisp
+     (setq package-check-signature nil)
+
+
+     (use-package org-gcal
+       :ensure t
+       :config
+       (setq org-gcal-client-id "986838543909-bq9656toalitssjanibgelrig3laro7o.apps.googleusercontent.com"
+	     org-gcal-client-secret "Ly7nbBy0AwE-eNjgdjC1rvt_"
+	     org-gcal-file-alist '(("s894117@gmail.com" .  "~/Dropbox/org/gcal.org"))))
+
+     (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+     (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+   #+END_SRC
+** Nyan Mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package nyan-mode
+       :ensure t)
+
+     (require 'nyan-mode)
+     (setq-default nyan-wavy-trail t)
+     (nyan-mode)
+     (nyan-start-animation)
+   #+END_SRC
+** Better Shell
+   #+BEGIN_SRC emacs-lisp
+     (use-package better-shell
+	 :ensure t
+	 :bind (("<f1>" . better-shell-shell)
+		("C-;" . better-shell-remote-open)))
+   #+END_SRC
+** About Latex
+   #+BEGIN_SRC emacs-lisp
+     ;;(package-install 'auctex)
+     (setq TeX-auto-save t)
+     (setq TeX-parse-self t)
+     (setq TeX-save-query nil)
+     (use-package exec-path-from-shell
+       :ensure t)
+
+     (when (memq window-system '(mac ns x))
+       (exec-path-from-shell-initialize))
+   #+END_SRC
+** Neotree
+   #+BEGIN_SRC emacs-lisp
+     (use-package neotree
+       :ensure t
+       :config
+       (progn
+	 (add-to-list 'load-path "/some/path/neotree")
+	 (require 'neotree)
+	 ;;(global-set-key [f8] 'neotree-toggle)
+	 ))
+
+     ;;(add-hook 'C++-mode-hook
+     ;;	  (lambda nil (save-excursion (neotree-show))))
+
+     (defun neotree-project-dir-toggle ()
+       "Open NeoTree using the project root, using find-file-in-project,
+     or the current buffer directory."
+       (interactive)
+       (let ((project-dir
+	      (ignore-errors
+		;;; Pick one: projectile or find-file-in-project
+		; (projectile-project-root)
+		(ffip-project-root)
+		))
+	     (file-name (buffer-file-name))
+	     (neo-smart-open t))
+	 (if (and (fboundp 'neo-global--window-exists-p)
+		  (neo-global--window-exists-p))
+	     (neotree-hide)
+	   (progn
+	     (neotree-show)
+	     (if project-dir
+		 (neotree-dir project-dir))
+	     (if file-name
+		 (neotree-find file-name))))))
+
+     (define-key global-map (kbd "<f8>") 'neotree-project-dir-toggle)
+   #+END_SRC
+** C++ setting
+   #+BEGIN_SRC emacs-lisp
+      ;; Run C programs directly from within emacs
+     (defun execute-c-program ()
+       (interactive)
+       (defvar foo)
+       (setq foo (concat "g++ " (buffer-name) " && ./a.out" ))
+       (shell-command foo))
+     (require 'cc-mode)
+     (define-key c-mode-base-map (kbd "<f9>") (lambda () (interactive) (save-all) (execute-c-program)))
+   #+END_SRC
+** Emacs client setting
+   #+BEGIN_SRC emacs-lisp
+     (when (featurep 'ns)
+       (defun ns-raise-emacs ()
+	 "Raise Emacs."
+	 (ns-do-applescript "tell application \"Emacs\" to activate"))
+
+       (defun ns-raise-emacs-with-frame (frame)
+	 "Raise Emacs and select the provided frame."
+	 (with-selected-frame frame
+	   (when (display-graphic-p)
+	     (ns-raise-emacs))))
+
+       (add-hook 'after-make-frame-functions 'ns-raise-emacs-with-frame)
+
+       (when (display-graphic-p)
+	 (ns-raise-emacs)))
+   #+END_SRC
+** Latex setting
+   #+BEGIN_SRC emacs-lisp
+	  (defun pdf-latex ()
+	    (interactive)
+	    (defvar foo)
+	    (setq foo (concat "pdflatex " (buffer-name) ))
+	    (shell-command foo))
+
+     (eval-after-load 'latex 
+     '(define-key LaTeX-mode-map (kbd "<f9>") (lambda () (interactive) (save-all) (pdf-latex) )))
+   #+END_SRC
+** Misc Package
+   #+BEGIN_SRC emacs-lisp
+     (use-package expand-region
+       :ensure t
+       :config 
+       (global-set-key (kbd "C-=") 'er/expand-region))
+     (use-package iedit
+       :ensure t)
+   #+END_SRC
+
