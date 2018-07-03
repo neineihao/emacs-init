@@ -210,7 +210,7 @@
 	  '(aw-leading-char-face
 	    ((t (:inherit ace-jump-face-foreground :height 3.0))))) 
 	 ))
-   #+END_SRCㄋ
+   #+END_SRC
 ** Flycheck
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck
