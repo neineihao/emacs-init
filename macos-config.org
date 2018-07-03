@@ -1,0 +1,138 @@
+* Default Setting
+** Package Manage
+   #+BEGIN_SRC emacs-lisp
+      (when (>= emacs-major-version 24)
+	  (require 'package)
+	  (package-initialize)
+	  (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+			   ("melpa" . "http://elpa.emacs-china.org/melpa/"))))      ;; cl - Common Lisp Extension
+      (require 'cl)
+
+      ;; Add Packages
+      (defvar my/packages '(
+		     ;; --- Auto-completion ---
+		     company
+		     ;; --- Better Editor ---
+		     hungry-delete
+		     swiper
+		     counsel
+		     smartparens
+		     exec-path-from-shell
+		     ;; --- Themes ---
+		     monokai-theme
+		     ;; solarized-theme
+		     ) "Default packages")
+
+      (setq package-selected-packages my/packages)
+
+      (defun my/packages-installed-p ()
+	  (loop for pkg in my/packages
+		when (not (package-installed-p pkg)) do (return nil)
+		finally (return t)))
+
+      (unless (my/packages-installed-p)
+	  (message "%s" "Refreshing package database...")
+	  (package-refresh-contents)
+	  (dolist (pkg my/packages)
+	    (when (not (package-installed-p pkg))
+	      (package-install pkg))))
+
+      ;; Find Executable Path on OS X
+      (when (memq window-system '(mac ns))
+	(exec-path-from-shell-initialize))
+   #+END_SRC
+** Turn off tool bar
+   #+BEGIN_SRC emacs-lisp
+     (tool-bar-mode -1)
+   #+END_SRC
+** Turn off scroll bar
+   #+BEGIN_SRC emacs-lisp
+     (scroll-bar-mode -1)
+   #+END_SRC
+** Show line number
+   #+BEGIN_SRC emacs-lisp
+     (global-linum-mode t)
+   #+END_SRC
+** Turn off the defacult screen
+   #+BEGIN_SRC emacs-lisp
+     (setq inhibit-splash-screen t)
+   #+END_SRC
+** Shortcut for init file
+   #+BEGIN_SRC emacs-lisp
+     (defun open-my-init-file()
+       (interactive)
+       (find-file "~/.emacs.d/init.el"))
+
+     (global-set-key (kbd "<f2>") 'open-my-init-file)
+   #+END_SRC
+** Set cursor type
+   #+BEGIN_SRC emacs-lisp
+     (setq-default cursor-type 'bar)
+   #+END_SRC
+** Disable backup file
+   #+BEGIN_SRC emacs-lisp
+     (setq make-backup-files nil)
+   #+END_SRC
+** Coding block in org mode
+   #+BEGIN_SRC emacs-lisp
+     (require 'org)
+     (setq org-src-fontify-natively t)
+   #+END_SRC
+** Recent file
+   #+BEGIN_SRC emacs-lisp
+     (require 'recentf)
+     (recentf-mode 1)
+     (setq recentf-max-menu-items 25)
+     (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+   #+END_SRC
+** Delete selection
+   #+BEGIN_SRC emacs-lisp
+     (delete-selection-mode t)
+   #+END_SRC
+** Full Screen
+   #+BEGIN_SRC emacs-lisp
+     (setq initial-frame-alist (quote ((fullscreen . maximized))))
+   #+END_SRC
+** Parenthesis show
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+     (show-paren-mode t)
+   #+END_SRC
+** Line highlight
+   #+BEGIN_SRC emacs-lisp
+     (global-hl-line-mode t)
+   #+END_SRC
+* Package
+** Company mode
+   #+BEGIN_SRC emacs-lisp
+	  (use-package company
+	    :ensure t
+	    :config (add-hook 'after-init-hook 'global-company-mode))
+	  (require 'company)
+	  (add-hook 'after-init-hook 'global-company-mode)
+	  ;; Don't enable company-mode in below major modes, OPTIONAL
+	  (setq company-global-modes '(not eshell-mode comint-mode erc-mode rcirc-mode))
+	  ;; "text-mode" is a major mode for editing files of text in a human language"
+	  ;; most major modes for non-programmers inherit from text-mode
+	  (defun text-mode-hook-setup ()
+	    ;; make `company-backends' local is critcal
+	    ;; or else, you will have completion in every major mode, that's very annoying!
+	    (make-local-variable 'company-backends)
+	    ;; company-ispell is the plugin to complete words
+	    (add-to-list 'company-backends 'company-ispell)
+	    ;; OPTIONAL, if `company-ispell-dictionary' is nil, `ispell-complete-word-dict' is used
+	    ;;  but I prefer hard code the dictionary path. That's more portable.
+	    (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt")))
+
+	  (add-hook 'text-mode-hook 'text-mode-hook-setup)
+
+	  (defun toggle-company-ispell ()
+	    (interactive)
+	    (cond
+	     ((memq 'company-ispell company-backends)
+	      (setq company-backends (delete 'company-ispell company-backends))
+	      (message "company-ispell disabled"))
+	     (t
+	      (add-to-list 'company-backends 'company-ispell)
+	      (message "company-ispell enabled!"))))
+   #+END_SRC
