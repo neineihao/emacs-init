@@ -24,6 +24,7 @@
 		    expand-region
 		    flycheck
 		    yasnippet
+		    popwin
 		    ;; --- Themes ---
 		    monokai-theme
 		    iedit
