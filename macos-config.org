@@ -4,7 +4,7 @@
 	 (require 'package)
 	 (package-initialize)
 	 (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-			  ("melpa" . "http://elpa.emacs-china.org/melpa/"))))      ;; cl - Common Lisp Extension
+			  ("melpa" . "http://melpa.org/packages/"))))      ;; cl - Common Lisp Extension
      (require 'cl)
      ;; Add Packages
      (defvar my/packages '(
@@ -28,6 +28,8 @@
 		    iedit
 		    undo-tree
 		    ;; solarized-theme
+		    ;; --- git ---
+		    magit
 		    ) "Default packages")
 
      (setq package-selected-packages my/packages)
@@ -128,6 +130,14 @@
      (setq indo-enable-flex-matching t)
      (setq ido-everywhere t)
      (ido-mode 1)
+   #+END_SRC
+** Backward kill word
+   #+BEGIN_SRC emacs-lisp
+;;     (global-set-key (kbd "C-w") 'backward-kill-word)
+   #+END_SRC
+** Comment line
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-;") 'comment-line)
    #+END_SRC
 * Package
 ** Company mode
@@ -260,8 +270,13 @@
    #+END_SRC
 ** Undo Tree
    #+BEGIN_SRC emacs-lisp
+     (require 'undo-tree)
      (global-undo-tree-mode)
    #+END_SRC
+** Magit
+  #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-x g") 'magit-status)
+  #+END_SRC
 * Theme
 ** Monokai
   #+Begin_SRC emacs-lisp
@@ -269,4 +284,9 @@
   #+END_SRC
 ** Nyan Mode
    #+BEGIN_SRC emacs-lisp
-     
+     (require 'nyan-mode)
+     (setq-default nyan-wavy-trail t)
+     (nyan-mode)
+     (nyan-start-animation)
+   #+END_SRC
+
