@@ -51,4 +51,5 @@
  ((string-equal system-type "gnu/linux") ; linux
   (progn ;; do something if the system is equal to Linux
     (message "Linux")
+    (org-babel-load-file (expand-file-name "~/.emacs.d/setting.org"))
     )))
