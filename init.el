@@ -32,8 +32,6 @@
 ;; (org-babel-load-file (expand-file-name "~/.emacs.d/setting.org")) 
 ;; (org-babel-load-file (expand-file-name "~/.emacs.d/capture.org"))
 
-
-
 ;; The general setting for all type of os
 (load-file "~/.emacs.d/misc/wc.el")
 (put 'set-goal-column 'disabled nil)
@@ -46,6 +44,7 @@
  ((string-equal system-type "darwin") ; Mac OS X
   (progn ;; do something if the system is equal to macos
     (message "Mac OS X")
+    (org-babel-load-file (expand-file-name "~/.emacs.d/package-manager.org"))
     (org-babel-load-file (expand-file-name "~/.emacs.d/macos-config.org"))
     ))
  ((string-equal system-type "gnu/linux") ; linux
