@@ -31,6 +31,24 @@
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0)))))
 ;; (org-babel-load-file (expand-file-name "~/.emacs.d/setting.org")) 
 ;; (org-babel-load-file (expand-file-name "~/.emacs.d/capture.org"))
-(org-babel-load-file (expand-file-name "~/.emacs.d/macos-config.org"))
+
+
+
+;; The general setting for all type of os
 (load-file "~/.emacs.d/misc/wc.el")
 (put 'set-goal-column 'disabled nil)
+;; The setting which depends on the os
+(cond
+ ((string-equal system-type "windows-nt") ; Microsoft Windows
+  (progn ;; do something if the system is equal to windows
+    (message "Microsoft Windows")
+    ))
+ ((string-equal system-type "darwin") ; Mac OS X
+  (progn ;; do something if the system is equal to macos
+    (message "Mac OS X")
+    (org-babel-load-file (expand-file-name "~/.emacs.d/macos-config.org"))
+    ))
+ ((string-equal system-type "gnu/linux") ; linux
+  (progn ;; do something if the system is equal to Linux
+    (message "Linux")
+    )))
