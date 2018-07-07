@@ -1,3 +1,7 @@
 #+TITLE:Config for macos
 #+STARTUP: showall hidestars
-
+* Open finder in emacs
+  #+BEGIN_SRC emacs-lisp
+    (use-package reveal-in-osx-finder
+      :ensure t)
+  #+END_SRC

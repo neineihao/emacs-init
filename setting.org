@@ -193,10 +193,10 @@
    #+END_SRC
 ** Avy
    #+BEGIN_SRC emacs-lisp
-     (use-package avy
-       :ensure t
-       :bind ("M-s" . avy-goto-char)
-	     ("M-g f" . avy-goto-line))
+     (Use-package avy
+	    :ensure t
+	    :bind (("M-s" . avy-goto-char)
+		  ("M-g f" . avy-goto-line)))
    #+END_SRC
 ** Ace Windows
    #+BEGIN_SRC emacs-lisp
