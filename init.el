@@ -45,7 +45,7 @@
   (progn ;; do something if the system is equal to macos
     (message "Mac OS X")
     ;; (org-babel-load-file (expand-file-name "~/.emacs.d/package-manager.org"))
-;;    (org-babel-load-file (expand-file-name "~/.emacs.d/macos-config.org"))
+    (org-babel-load-file (expand-file-name "~/.emacs.d/macos-config.org"))
     (org-babel-load-file (expand-file-name "~/.emacs.d/general-setting.org"))
     ))
  ((string-equal system-type "gnu/linux") ; linux

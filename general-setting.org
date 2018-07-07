@@ -241,8 +241,8 @@
    #+BEGIN_SRC emacs-lisp
      (use-package avy
        :ensure t
-       :bind (("M-s" . avy-goto-char)
-	      ("M-g f" . avy-goto-line)))
+       :bind (("M-g w" . avy-goto-char)
+	      ("M-g l" . avy-goto-line)))
    #+END_SRC
 ** Ace Window
    #+BEGIN_SRC emacs-lisp
