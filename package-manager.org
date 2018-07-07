@@ -32,6 +32,8 @@
 		    ;; solarized-theme
 		    ;; --- git ---
 		    magit
+		    web-mode
+		    js2-refactor
 		    ) "Default packages")
 
      (setq package-selected-packages my/packages)
