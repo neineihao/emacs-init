@@ -22,7 +22,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company hungry-delete swiper counsel smartparens exec-path-from-shell monokai-theme))))
+    (magit company hungry-delete swiper counsel smartparens exec-path-from-shell monokai-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -35,6 +35,7 @@
 ;; The general setting for all type of os
 (load-file "~/.emacs.d/misc/wc.el")
 (put 'set-goal-column 'disabled nil)
+(org-babel-load-file (expand-file-name "~/.emacs.d/general-setting.org"))
 ;; The setting which depends on the os
 (cond
  ((string-equal system-type "windows-nt") ; Microsoft Windows
@@ -46,10 +47,10 @@
     (message "Mac OS X")
     ;; (org-babel-load-file (expand-file-name "~/.emacs.d/package-manager.org"))
     (org-babel-load-file (expand-file-name "~/.emacs.d/macos-config.org"))
-    (org-babel-load-file (expand-file-name "~/.emacs.d/general-setting.org"))
     ))
  ((string-equal system-type "gnu/linux") ; linux
   (progn ;; do something if the system is equal to Linux
     (message "Linux")
-    (org-babel-load-file (expand-file-name "~/.emacs.d/setting.org"))
+    (org-babel-load-file (expand-file-name "~/.emacs.d/gnu-config.org"))
+;;    (org-babel-load-file (expand-file-name "~/.emacs.d/setting.org"))
     )))

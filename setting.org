@@ -189,11 +189,11 @@
 ** Theme setting (monokai)
    #+BEGIN_SRC emacs-lisp
      (use-package monokai-theme
-       :ensure t)    
+       :ensure t)
    #+END_SRC
 ** Avy
    #+BEGIN_SRC emacs-lisp
-     (Use-package avy
+     (use-package avy
 	    :ensure t
 	    :bind (("M-s" . avy-goto-char)
 		  ("M-g f" . avy-goto-line)))
