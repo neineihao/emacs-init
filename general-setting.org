@@ -128,6 +128,12 @@
 	     (message "Indent buffer.")))))
 
      (global-set-key (kbd "C-M-\\") 'indent-region-or-buffer)
+
+
+     (defun swiper-word()
+       (interactive)
+       (swiper (point-min) (point-max))
+       )
    #+END_SRC
 ** Comment region or line
    #+BEGIN_SRC emacs-lisp
@@ -195,6 +201,18 @@
 								#'launch-separate-emacs-under-x
 							      #'launch-separate-emacs-in-terminal)))))
 	 (save-buffers-kill-emacs)))
+   #+END_SRC
+** Isearch setting
+   #+BEGIN_SRC emacs-lisp
+	 (defun isearch-occur ()
+	   "Invoke `occur' from within isearch."
+	   (interactive)
+	   (let ((case-fold-search isearch-case-fold-search))
+	     (occur (if isearch-regexp isearch-string (regexp-quote isearch-string)))))
+   #+END_SRC
+** Set mark color
+   #+BEGIN_SRC emacs-lisp
+     (set-face-attribute 'region nil :background "#ffff99")
    #+END_SRC
 * Package
 ** Company mode
